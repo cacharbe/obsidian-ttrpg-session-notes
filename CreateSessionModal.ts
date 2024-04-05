@@ -15,6 +15,7 @@ export default class CreateSessionModal extends Modal {
 		let { contentEl } = this;
 		let form = contentEl.createEl('form');
 
+
 		// Create a div for the campaign select
 		let campaignDiv = form.createEl('div');
 		campaignDiv.style.marginBottom = '10px';  // Add some space at the bottom
@@ -115,6 +116,12 @@ export default class CreateSessionModal extends Modal {
 
 					let sessionFiles = campaignFolder.children.filter(file => file instanceof TFile);
 
+					// Filter out files that do not have a sessionNum entry in the frontmatter
+					sessionFiles = sessionFiles.filter(file => {
+					let cache = this.app.metadataCache.getFileCache(file);
+						return cache && cache.frontmatter && cache.frontmatter.sessionNum;
+						});
+
 					// Sort the session files by their sessionNum frontmatter entry in ascending order
 					sessionFiles.sort(async (a, b) => {
 						if (a instanceof TFile && b instanceof TFile) {
@@ -130,8 +137,11 @@ export default class CreateSessionModal extends Modal {
 						return 0;
 					});
 
+					console.log('Session Files: ', sessionFiles);
+
 					// Get the most recent session file
 					let mostRecentSessionFile = sessionFiles[sessionFiles.length - 1];
+					console.log('Most Recent Session File: ', mostRecentSessionFile);
 
 					if (mostRecentSessionFile instanceof TFile) {
 						console.log('Most Recent Session File: ', mostRecentSessionFile.name);
