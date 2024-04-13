@@ -11,6 +11,16 @@ export default class CreateSessionModal extends Modal {
 		this.plugin = plugin;
 	}
 
+	createInputDiv(form: HTMLElement, labelText: string, inputType: string = 'text'): HTMLInputElement {
+		let div = form.createEl('div');
+		div.style.marginBottom = '10px';  // Add some space at the bottom
+		div.createEl('label', { text: labelText });
+		let input = div.createEl('input');
+		input.type = inputType;
+		return input;
+	}
+
+
 	onOpen() {
 		let { contentEl } = this;
 		let form = contentEl.createEl('form');
@@ -30,53 +40,28 @@ export default class CreateSessionModal extends Modal {
 		selectCampaignOption.disabled = true;
 
 		// Create a div for the session number input
-		let sessionNumDiv = form.createEl('div');
-		sessionNumDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		sessionNumDiv.createEl('label', { text: 'Session Number: ' });
-		let sessionNumInput = sessionNumDiv.createEl('input');
-		//sessionNumInput.type = 'number';
+		let sessionNumInput = this.createInputDiv(form, 'Session Number: ');
 
 		// Create a div for the session title input
-		let sessionTitleDiv = form.createEl('div');
-		sessionTitleDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		sessionTitleDiv.createEl('label', { text: 'Session Title: ' });
-		let sessionTitleInput = sessionTitleDiv.createEl('input');
+		let sessionTitleInput = this.createInputDiv(form, 'Session Title: ');
 
 		// Create a div for the world input
-		let worldDiv = form.createEl('div');
-		worldDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		worldDiv.createEl('label', { text: 'World: ' });
-		let worldInput = worldDiv.createEl('input');
+		let worldInput = this.createInputDiv(form, 'World: ');
 
 		// Create a div for the thread input
-		let threadDiv = form.createEl('div');
-		threadDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		threadDiv.createEl('label', { text: 'Thread: ' });
-		let threadInput = threadDiv.createEl('input');
+		let threadInput = this.createInputDiv(form, 'Thread: ');
 
 		// Create a div for the chapter input
-		let chapterDiv = form.createEl('div');
-		chapterDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		chapterDiv.createEl('label', { text: 'Chapter: ' });
-		let chapterInput = chapterDiv.createEl('input');
+		let chapterInput = this.createInputDiv(form, 'Chapter: ');
 
 		// Create a div for the location input
-		let locationDiv = form.createEl('div');
-		locationDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		locationDiv.createEl('label', { text: 'Location: ' });
-		let locationInput = locationDiv.createEl('input');
+		let locationInput = this.createInputDiv(form, 'Location: ');
 
 		// Create a div for the fc-date input
-		let fcDateDiv = form.createEl('div');
-		fcDateDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		fcDateDiv.createEl('label', { text: 'Fc-date: ' });
-		let fcDateInput = fcDateDiv.createEl('input');
+		let fcDateInput = this.createInputDiv(form, 'Fc-date: ');
 
 		// Create a div for the fc-category input
-		let fcCategoryDiv = form.createEl('div');
-		fcCategoryDiv.style.marginBottom = '10px';  // Add some space at the bottom
-		fcCategoryDiv.createEl('label', { text: 'Fc-category: ' });
-		let fcCategoryInput = fcCategoryDiv.createEl('input');
+		let fcCategoryInput = this.createInputDiv(form, 'Fc-category: ');
 
 
 		// Get the 'ttrpgs' folder
@@ -97,79 +82,41 @@ export default class CreateSessionModal extends Modal {
 			campaignSelect.addEventListener('change', async () => {
 				let selectedCampaign = campaignSelect.value;
 				let campaignFolder = this.app.vault.getAbstractFileByPath(`ttrpgs/${selectedCampaign}`);
-				
 
 				if (campaignFolder instanceof TFolder) {
-					let sessionNums = (await Promise.all(campaignFolder.children.map(async file => {
-						if (file instanceof TFile) {
-							let cache = this.app.metadataCache.getFileCache(file);
-							if (cache && cache.frontmatter && cache.frontmatter.sessionNum) {
-								return cache.frontmatter.sessionNum;
+					let sessionFiles = campaignFolder.children.filter(file => file instanceof TFile);
+					let sessionNums = [];
+					let mostRecentSessionFile;
+					let maxSessionNum = 0;
+
+					for (let file of sessionFiles) {
+						let cache = this.app.metadataCache.getFileCache(file);
+						if (cache && cache.frontmatter && cache.frontmatter.sessionNum) {
+							let sessionNum = Number(cache.frontmatter.sessionNum);
+							sessionNums.push(sessionNum);
+							if (sessionNum > maxSessionNum) {
+								maxSessionNum = sessionNum;
+								mostRecentSessionFile = file;
 							}
 						}
-					}))).filter(Boolean);
-
-					let maxSessionNum = Math.max(...sessionNums.map(Number));
-					let nextSessionNum = (maxSessionNum + 1).toString().padStart(2, '0');
-					// Set the value of the session number input
-					sessionNumInput.value = nextSessionNum;
-
-					let sessionFiles = campaignFolder.children.filter(file => file instanceof TFile);
-
-					// Filter out files that do not have a sessionNum entry in the frontmatter
-					sessionFiles = sessionFiles.filter(file => {
-					let cache = this.app.metadataCache.getFileCache(file);
-						return cache && cache.frontmatter && cache.frontmatter.sessionNum;
-						});
-
-					// Sort the session files by their sessionNum frontmatter entry in ascending order
-					sessionFiles.sort(async (a, b) => {
-						if (a instanceof TFile && b instanceof TFile) {
-							let cacheA = this.app.metadataCache.getFileCache(a);
-							let cacheB = this.app.metadataCache.getFileCache(b);
-
-							let sessionNumA = cacheA && cacheA.frontmatter && cacheA.frontmatter.sessionNum ? cacheA.frontmatter.sessionNum : 0;
-							let sessionNumB = cacheB && cacheB.frontmatter && cacheB.frontmatter.sessionNum ? cacheB.frontmatter.sessionNum : 0;
-
-							return sessionNumA - sessionNumB;
-						}
-
-						return 0;
-					});
-
-					console.log('Session Files: ', sessionFiles);
-
-					// Get the most recent session file
-					let mostRecentSessionFile = sessionFiles[sessionFiles.length - 1];
-					console.log('Most Recent Session File: ', mostRecentSessionFile);
-
-					if (mostRecentSessionFile instanceof TFile) {
-						console.log('Most Recent Session File: ', mostRecentSessionFile.name);
-						let cache = this.app.metadataCache.getFileCache(mostRecentSessionFile);
-						console.log('Cache: ', cache);
-						// Get the frontmatter items
-						let world = cache.frontmatter['world'];
-						let thread = cache.frontmatter['thread'];
-						let chapter = cache.frontmatter['chapter'];
-						let location = cache.frontmatter['location'];
-
-						let fcDate = cache.frontmatter['fc-end'] ? cache.frontmatter['fc-end'] : cache.frontmatter['fc-date'];
-
-						let fcCategory = cache.frontmatter['fc-category'];
-
-			
-						// Update the input fields with the frontmatter values
-						worldInput.value = world || '';
-						threadInput.value = thread || '';
-						chapterInput.value = chapter || '';
-						locationInput.value = location || '';
-						fcDateInput.value = fcDate || '';
-						fcCategoryInput.value = fcCategory || '';
 					}
 
-					
+					let nextSessionNum = (maxSessionNum + 1).toString().padStart(2, '0');
+					sessionNumInput.value = nextSessionNum;
+
+					if (mostRecentSessionFile) {
+						let cache = this.app.metadataCache.getFileCache(mostRecentSessionFile);
+						let frontmatterKeys = ['world', 'thread', 'chapter', 'location', 'fc-date', 'fc-category'];
+						let inputFields = [worldInput, threadInput, chapterInput, locationInput, fcDateInput, fcCategoryInput];
+
+						frontmatterKeys.forEach((key, index) => {
+							let value = key === 'fc-date' && cache.frontmatter['fc-end'] ? cache.frontmatter['fc-end'] : cache.frontmatter[key];
+							inputFields[index].value = value || '';
+						});
+					}
 				}
 			});
+
 		}
 
 		// Create a div for the date input
@@ -212,25 +159,48 @@ export default class CreateSessionModal extends Modal {
 					let templateContent = await this.app.vault.read(templateFile);
 
 					// Replace template variables in templateContent...
-					templateContent = templateContent.replace(/{{campaign}}/g, selectedCampaign);
-					templateContent = templateContent.replace(/{{sessionNum}}/g, nextSessionNum);
-					templateContent = templateContent.replace(/{{date}}/g, selectedDate);
-					templateContent = templateContent.replace(/{{world}}/g, worldInput.value);
-					templateContent = templateContent.replace(/{{thread}}/g, threadInput.value);
-					templateContent = templateContent.replace(/{{chapter}}/g, chapterInput.value);
-					templateContent = templateContent.replace(/{{location}}/g, locationInput.value);
-					templateContent = templateContent.replace(/{{fc-date}}/g, fcDateInput.value);
-					templateContent = templateContent.replace(/{{fc-category}}/g, fcCategoryInput.value);
+					const templateVariables = {
+						'{{campaign}}': selectedCampaign,
+						'{{sessionNum}}': nextSessionNum,
+						'{{date}}': selectedDate,
+						'{{world}}': worldInput.value,
+						'{{thread}}': threadInput.value,
+						'{{chapter}}': chapterInput.value,
+						'{{location}}': locationInput.value,
+						'{{fc-date}}': fcDateInput.value,
+						'{{fc-category}}': fcCategoryInput.value
+					};
+
+					for (let key in templateVariables) {
+						templateContent = templateContent.replace(new RegExp(key, 'g'), templateVariables[key]);
+					}
 
 
 
 
 					let newNotePath = `ttrpgs/${selectedCampaign}/${nextSessionNum}_${formattedDate} - ${sessionTitle}.md`;
 					let newNoteFile = await this.app.vault.create(newNotePath, templateContent);
+					//await this.app.workspace.openNote(newNoteFile);
+					let leaf = app.workspace.getLeaf(true);
+					leaf.openFile(newNoteFile);
+					
+					this.close();
 				}
 
 			}
 		});
 	}
 
+}
+
+function getLeafWithNote(app: App, file: TFile): undefined | WorkspaceLeaf {
+	let openedLeaf: WorkspaceLeaf | undefined = undefined;
+	app.workspace.iterateAllLeaves((leaf) => {
+		// @ts-ignore
+		const leafFile = leaf.view.file as TFile;
+		if (leafFile?.path === file.path) {
+			openedLeaf = leaf;
+		}
+	});
+	return openedLeaf;
 }
