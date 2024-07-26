@@ -81,7 +81,7 @@ export default class CreateSessionSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						console.log('Settings saved:', this.plugin.settings);
 
-
+						console.log('Settings saved:', this.plugin.settings);
 					});
 				}
 			});
