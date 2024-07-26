@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 //import { Console } from 'console';
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, TFolder } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
 import CreateSessionPlugin from './main';
 import CreateSessionSettingsTab from './CreateSessionSettings';
 //import { parseFrontMatterEntry, parseFrontMatter } from 'obsidian';

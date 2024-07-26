@@ -3,6 +3,10 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Set
 import CreateSessionModal from './CreateSessionModal';
 import CreateSessionSettingsTab from './CreateSessionSettings';
 
+interface CreateSessionPluginSettings {
+	sessionTemplate: string,
+	ttrpgsFolder: string,
+}
 const DEFAULT_SETTINGS: CreateSessionPluginSettings = {
 	sessionTemplate: '',
 	ttrpgsFolder: '',
