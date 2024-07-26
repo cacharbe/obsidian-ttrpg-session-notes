@@ -80,6 +80,8 @@ export default class CreateSessionSettingsTab extends PluginSettingTab {
 						this.plugin.settings.ttrpgsFolder = value;
 						await this.plugin.saveSettings();
 						console.log('Settings saved:', this.plugin.settings);
+
+
 					});
 				}
 			});
