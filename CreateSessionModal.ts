@@ -91,13 +91,13 @@ export default class CreateSessionModal extends Modal {
 					let maxSessionNum = 0;
 
 					for (const file of sessionFiles) {
-						const cache = this.app.metadataCache.getFileCache(file);
+						const cache = this.app.metadataCache.getFileCache(file as TFile);
 						if (cache && cache.frontmatter && cache.frontmatter.sessionNum) {
 							const sessionNum = Number(cache.frontmatter.sessionNum);
 							sessionNums.push(sessionNum);
 							if (sessionNum > maxSessionNum) {
 								maxSessionNum = sessionNum;
-								mostRecentSessionFile = file;
+								mostRecentSessionFile = file as TFile;
 							}
 						}
 					}
@@ -160,7 +160,7 @@ export default class CreateSessionModal extends Modal {
 					let templateContent = await this.app.vault.read(templateFile);
 
 					// Replace template variables in templateContent...
-					const templateVariables = {
+					const templateVariables: { [key: string]: string } = {
 						'{{campaign}}': selectedCampaign,
 						'{{sessionNum}}': nextSessionNum,
 						'{{date}}': selectedDate,
