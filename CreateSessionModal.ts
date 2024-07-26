@@ -109,13 +109,14 @@ export default class CreateSessionModal extends Modal {
 
 					if (mostRecentSessionFile) {
 						const cache = this.app.metadataCache.getFileCache(mostRecentSessionFile);
+						const frontmatterKeys = ['world', 'thread', 'chapter', 'location', 'fc-date', 'fc-category'];
+						const inputFields = [worldInput, threadInput, chapterInput, locationInput, fcDateInput, fcCategoryInput];
 						if (cache) {
-							const frontmatterKeys = ['world', 'thread', 'chapter', 'location', 'fc-date', 'fc-category'];
-							const inputFields = [worldInput, threadInput, chapterInput, locationInput, fcDateInput, fcCategoryInput];
-
 							frontmatterKeys.forEach((key, index) => {
-								const value = key === 'fc-date' && cache.frontmatter['fc-end'] ? cache.frontmatter['fc-end'] : cache.frontmatter[key];
-								inputFields[index].value = value || '';
+								if (cache.frontmatter) {
+									const value = key === 'fc-date' && cache.frontmatter['fc-end'] ? cache.frontmatter['fc-end'] : cache.frontmatter[key];
+									inputFields[index].value = value || '';
+								}
 							});
 						} else {
 							console.error('Cache is undefined for the most recent session file.');
