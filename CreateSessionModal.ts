@@ -1,8 +1,10 @@
-import { Console } from 'console';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+//import { Console } from 'console';
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, TFolder } from 'obsidian';
 import CreateSessionPlugin from './main';
 import CreateSessionSettingsTab from './CreateSessionSettings';
-import { parseFrontMatterEntry, parseFrontMatter } from 'obsidian';
+//import { parseFrontMatterEntry, parseFrontMatter } from 'obsidian';
+import { parseFrontMatterEntry} from 'obsidian';
 
 export default class CreateSessionModal extends Modal {
 	plugin: CreateSessionPlugin;
@@ -107,13 +109,17 @@ export default class CreateSessionModal extends Modal {
 
 					if (mostRecentSessionFile) {
 						const cache = this.app.metadataCache.getFileCache(mostRecentSessionFile);
-						const frontmatterKeys = ['world', 'thread', 'chapter', 'location', 'fc-date', 'fc-category'];
-						const inputFields = [worldInput, threadInput, chapterInput, locationInput, fcDateInput, fcCategoryInput];
+						if (cache) {
+							const frontmatterKeys = ['world', 'thread', 'chapter', 'location', 'fc-date', 'fc-category'];
+							const inputFields = [worldInput, threadInput, chapterInput, locationInput, fcDateInput, fcCategoryInput];
 
-						frontmatterKeys.forEach((key, index) => {
-							const value = key === 'fc-date' && cache.frontmatter['fc-end'] ? cache.frontmatter['fc-end'] : cache.frontmatter[key];
-							inputFields[index].value = value || '';
-						});
+							frontmatterKeys.forEach((key, index) => {
+								const value = key === 'fc-date' && cache.frontmatter['fc-end'] ? cache.frontmatter['fc-end'] : cache.frontmatter[key];
+								inputFields[index].value = value || '';
+							});
+						} else {
+							console.error('Cache is undefined for the most recent session file.');
+						}
 					}
 				}
 			});

@@ -1,5 +1,5 @@
-import { Console } from 'console';
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, TFolder } from 'obsidian';
+//import { Console } from 'console';
+import { App, PluginSettingTab, Setting, TFile, TFolder } from 'obsidian';
 import CreateSessionPlugin from './main';
 
 
@@ -29,7 +29,7 @@ export default class CreateSessionSettingsTab extends PluginSettingTab {
 
 					// Populate the dropdown with the template names
 					templates.forEach(template => {
-						dropdown.addOption(template.path, template.basename);
+						dropdown.addOption(template.path, template.name);
 					});
 
 					// Set the value of the dropdown to the current template
