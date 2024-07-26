@@ -65,7 +65,8 @@ export default class CreateSessionModal extends Modal {
 
 
 		// Get the 'ttrpgs' folder
-		const ttrpgsFolder = this.app.vault.getAbstractFileByPath('ttrpgs');
+		const ttrpgsFolder = this.app.vault.getAbstractFileByPath(this.plugin.settings.ttrpgsFolder);
+		// const ttrpgsFolder = this.app.vault.getAbstractFileByPath('ttrpgs');
 
 		if (ttrpgsFolder instanceof TFolder) {
 			// Get the subfolders (campaigns)

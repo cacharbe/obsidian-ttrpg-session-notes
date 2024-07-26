@@ -5,6 +5,7 @@ import CreateSessionSettingsTab from './CreateSessionSettings';
 
 const DEFAULT_SETTINGS: CreateSessionPluginSettings = {
 	sessionTemplate: '',
+	ttrpgsFolder: '',
 }
 
 export default class CreateSessionPlugin extends Plugin {

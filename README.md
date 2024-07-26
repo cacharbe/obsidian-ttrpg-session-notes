@@ -17,7 +17,7 @@ This guide provides instructions on configuring your Obsidian vault for optimal 
 5. Install and enable the plugin.
 
 ## Step 2: Create the Required Folder Structure
-The plugin currently makes several assumptions about the set up of your vault. To ensure the plugin works correctly, you need to create the following folder structure within your vault:
+The plugin currently makes several assumptions about the set up of your vault. To ensure the plugin works correctly, it is suggested that the user create the following folder structure within their vault:
 
 - `ttrpgs/`: Root folder for TTRPG content.
   - `campaign1/`: Folder for your first campaign (rename as needed).

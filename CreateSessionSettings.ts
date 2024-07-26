@@ -21,11 +21,11 @@ export default class CreateSessionSettingsTab extends PluginSettingTab {
 			.setDesc('The note to use as a template for new sessions')
 			.addDropdown(async dropdown => {
 				// Get the 'templates' folder
-				let templatesFolder = this.app.vault.getAbstractFileByPath('templates');
+				const templatesFolder = this.app.vault.getAbstractFileByPath('templates');
 
 				if (templatesFolder instanceof TFolder) {
 					// Get the files in the 'templates' folder
-					let templates = templatesFolder.children.filter(file => file instanceof TFile);
+					const templates = templatesFolder.children.filter(file => file instanceof TFile);
 
 					// Populate the dropdown with the template names
 					templates.forEach(template => {
@@ -39,6 +39,45 @@ export default class CreateSessionSettingsTab extends PluginSettingTab {
 					dropdown.onChange(async (value) => {
 						console.log('Template selected:', value);
 						this.plugin.settings.sessionTemplate = value;
+						await this.plugin.saveSettings();
+						console.log('Settings saved:', this.plugin.settings);
+					});
+				}
+			});
+
+		new Setting(containerEl)
+			.setName('Campaigns Folder')
+			.setDesc('The Folder Contianing the Campaign Folder(s) for Sessions')
+			.addDropdown(async dropdown => {
+				// Get the 'ttrpgs' folder
+				const ttrpgsFolder = this.app.vault.getFolderByPath('ttrpgs');
+				// const rootFolder = this.app.vault.adapter.basePath;
+				const rootFolder = this.app.vault.getFolderByPath('/');
+				console.log('TTRPGS selected:', ttrpgsFolder);
+				console.log('Folder selected:', rootFolder);
+				if (ttrpgsFolder !== null) {
+					// ttrpgsFolder is not null, do something...
+				} else {
+					// ttrpgsFolder is null, handle the null case...
+				}
+
+				if (rootFolder instanceof TFolder) {
+					// Get the files in the 'templates' folder
+					const folders = rootFolder.children.filter(folder => folder instanceof TFolder);
+
+					// Populate the dropdown with the child folders
+					folders.forEach(folder => {
+						dropdown.addOption(folder.path, folder.name);
+					});
+
+
+					// Set the value of the dropdown to the current template
+					dropdown.setValue(this.plugin.settings.ttrpgsFolder);
+
+					// When a template is selected, save it to the settings
+					dropdown.onChange(async (value) => {
+						console.log('Folder selected:', value);
+						this.plugin.settings.ttrpgsFolder = value;
 						await this.plugin.saveSettings();
 						console.log('Settings saved:', this.plugin.settings);
 					});
