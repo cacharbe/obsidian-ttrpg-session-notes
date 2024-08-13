@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Original Sessions Notes Build
 run-name: ${{ github.actor }} is pushing to Session Notes
 on: [push]
 permissions: write-all
@@ -31,4 +31,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
-          path: ./
+          path: ./*.js*
