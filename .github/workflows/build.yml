@@ -29,9 +29,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
-          path: |
-            ./  # Adjust this to the directory where your build output is located
-            # Add other paths if needed
+          path: *.js 
 
   deploy:
     needs: build
@@ -44,7 +42,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: ./dist  # Adjust this to the directory where you want to download the artifacts
+          path: dist  # Adjust this to the directory where you want to download the artifacts
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
