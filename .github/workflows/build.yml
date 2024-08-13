@@ -50,4 +50,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./  # Adjust this to the directory where your build output is located
+          publish_dir: ./dist  # Adjust this to the directory where your build output is located
