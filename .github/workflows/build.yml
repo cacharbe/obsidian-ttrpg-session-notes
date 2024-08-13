@@ -35,3 +35,12 @@ jobs:
               ./main.js
               ./Manif*.json
 
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./main.js
+            ./Manif*.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
