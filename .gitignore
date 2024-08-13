@@ -1,0 +1,35 @@
+# vscode
+.vscode 
+
+# Intellij
+*.iml
+.idea
+
+# npm
+node_modules
+
+# Don't include the compiled main.js file in the repo.
+# They should be uploaded to GitHub releases instead.
+main.js
+
+# Exclude sourcemaps
+*.map
+
+# obsidian
+data.json
+
+# Exclude macOS Finder (System Explorer) View States
+.DS_Store
+/.vs/obsidian-ttrpg-session-notes/config/applicationhost.config
+/.vs/obsidian-ttrpg-session-notes/copilot-chat/7738d4db/sessions/1173d2bb-7bc3-4f1e-b986-33b477933b22
+/.vs/obsidian-ttrpg-session-notes/FileContentIndex/44287a02-fc54-4aad-866c-b90234baf159.vsidx
+/.vs/obsidian-ttrpg-session-notes/FileContentIndex/7a6bfe28-7553-4ba9-b412-f93fab1eb233.vsidx
+/.vs/obsidian-ttrpg-session-notes/FileContentIndex/d6464038-2180-4c0c-829c-72fc042b1e80.vsidx
+/.vs/obsidian-ttrpg-session-notes/FileContentIndex/fff8f56a-8074-4901-a2fc-d46b09db8d8b.vsidx
+/.vs/obsidian-ttrpg-session-notes/FileContentIndex/8d377bca-24bd-4792-a61e-ae3b0f3bf806.vsidx
+/.vs/obsidian-ttrpg-session-notes/v17/.wsuo
+/.vs/obsidian-ttrpg-session-notes/v17/DocumentLayout.json
+/.vs/ProjectSettings.json
+/.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json
+/.vs/obsidian-ttrpg-session-notes/FileContentIndex
