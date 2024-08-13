@@ -30,7 +30,7 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            dist  # Adjust this to the directory where your build output is located
+            ./dist  # Adjust this to the directory where your build output is located
             # Add other paths if needed
 
   deploy:
