@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm outdated)",
+      "Bash(npm outdated *)",
+      "Bash(npm audit)",
+      "Bash(npm audit --json)",
+      "Bash(npm ls)",
+      "Bash(npm ls *)",
+      "Bash(npm view *)",
+      "Bash(npm config get *)",
+      "Bash(npm fund)",
+      "Bash(tsc --noEmit)",
+      "Bash(tsc -noEmit)",
+      "Bash(tsc --version)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(npx tsc --version)",
+      "Bash(gh repo view *)",
+      "Bash(gh repo clone *)",
+      "mcp__obsidian-ttrpg__obsidian_list_files_in_vault",
+      "mcp__obsidian-ttrpg__obsidian_list_files_in_dir",
+      "mcp__obsidian-ttrpg__obsidian_get_file_contents",
+      "mcp__obsidian-ttrpg__obsidian_batch_get_file_contents",
+      "mcp__obsidian-ttrpg__obsidian_simple_search",
+      "mcp__obsidian-ttrpg__obsidian_complex_search",
+      "mcp__obsidian-ttrpg__obsidian_get_recent_changes"
+    ]
+  }
+}
