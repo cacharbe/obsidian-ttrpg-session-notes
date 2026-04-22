@@ -1,6 +1,8 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
+import { copyFileSync, existsSync, realpathSync } from "fs";
+import { join } from "path";
 
 const banner =
 `/*
@@ -10,6 +12,38 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = (process.argv[2] === "production");
+
+const VAULT_PLUGIN_DIR = join(
+	"..",
+	"test vaults",
+	"plugin-test",
+	".obsidian",
+	"plugins",
+	"obsidian-ttrpg-session-notes"
+);
+
+// In dev (watch) mode, copy main.js to the test vault after each successful
+// rebuild so plugin-reloader in Obsidian picks it up without a manual copy.
+// Skips silently if the vault directory doesn't exist or is still a junction
+// (run `npm run deploy:local` once first to convert it to a real directory).
+const devCopyPlugin = {
+	name: "dev-copy-to-vault",
+	setup(build) {
+		build.onEnd(result => {
+			if (result.errors.length > 0) return;
+			try {
+				if (!existsSync(VAULT_PLUGIN_DIR)) return;
+				const realVault = realpathSync(VAULT_PLUGIN_DIR);
+				const realHere  = realpathSync(".");
+				if (realVault === realHere) return; // still a junction — skip
+				copyFileSync("main.js", join(VAULT_PLUGIN_DIR, "main.js"));
+				console.log("[dev] Copied main.js → test vault");
+			} catch {
+				// Any other error — don't fail the build.
+			}
+		});
+	},
+};
 
 const context = await esbuild.context({
 	banner: {
@@ -38,6 +72,7 @@ const context = await esbuild.context({
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
 	outfile: "main.js",
+	plugins: prod ? [] : [devCopyPlugin],
 });
 
 if (prod) {
