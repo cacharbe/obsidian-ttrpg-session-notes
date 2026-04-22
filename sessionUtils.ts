@@ -3,6 +3,15 @@
  * No Obsidian API dependencies — safe to unit test in Node.
  */
 
+/**
+ * Frontmatter keys carried forward from the most recent session note
+ * when a campaign is selected in the modal. Order must match the order
+ * of inputFields in CreateSessionModal.onOpen().
+ */
+export const CARRYFORWARD_KEYS = [
+	'world', 'thread', 'chapter', 'adventure', 'location', 'fc-date', 'fc-category',
+] as const;
+
 /** Returns the next sequential session number given all existing ones. */
 export function nextSessionNumber(existingNums: number[]): number {
 	if (existingNums.length === 0) return 1;

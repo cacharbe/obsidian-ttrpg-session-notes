@@ -4,7 +4,28 @@ import {
 	formatDateString,
 	buildNotePath,
 	applyTemplateVariables,
+	CARRYFORWARD_KEYS,
 } from '../sessionUtils';
+
+// ---------------------------------------------------------------------------
+// CARRYFORWARD_KEYS
+// ---------------------------------------------------------------------------
+describe('CARRYFORWARD_KEYS', () => {
+	it('includes adventure so it pre-populates from the most recent session', () => {
+		expect(CARRYFORWARD_KEYS).toContain('adventure');
+	});
+
+	it('includes all taxonomy and calendar fields', () => {
+		const required = ['world', 'thread', 'chapter', 'adventure', 'location', 'fc-date', 'fc-category'];
+		required.forEach(key => expect(CARRYFORWARD_KEYS).toContain(key));
+	});
+
+	it('preserves order: adventure sits after chapter and before location', () => {
+		const keys = [...CARRYFORWARD_KEYS];
+		expect(keys.indexOf('adventure')).toBeGreaterThan(keys.indexOf('chapter'));
+		expect(keys.indexOf('adventure')).toBeLessThan(keys.indexOf('location'));
+	});
+});
 
 // ---------------------------------------------------------------------------
 // nextSessionNumber

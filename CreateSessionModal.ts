@@ -5,6 +5,7 @@ import CreateSessionPlugin from './main';
 import CreateSessionSettingsTab from './CreateSessionSettings';
 //import { parseFrontMatterEntry, parseFrontMatter } from 'obsidian';
 import { parseFrontMatterEntry} from 'obsidian';
+import { CARRYFORWARD_KEYS } from './sessionUtils';
 
 export default class CreateSessionModal extends Modal {
 	plugin: CreateSessionPlugin;
@@ -55,6 +56,9 @@ export default class CreateSessionModal extends Modal {
 
 		// Create a div for the chapter input
 		const chapterInput = this.createInputDiv(form, 'Chapter: ');
+
+		// Create a div for the adventure input
+		const adventureInput = this.createInputDiv(form, 'Adventure: ');
 
 		// Create a div for the location input
 		const locationInput = this.createInputDiv(form, 'Location: ');
@@ -109,8 +113,8 @@ export default class CreateSessionModal extends Modal {
 
 					if (mostRecentSessionFile) {
 						const cache = this.app.metadataCache.getFileCache(mostRecentSessionFile);
-						const frontmatterKeys = ['world', 'thread', 'chapter', 'location', 'fc-date', 'fc-category'];
-						const inputFields = [worldInput, threadInput, chapterInput, locationInput, fcDateInput, fcCategoryInput];
+						const frontmatterKeys = [...CARRYFORWARD_KEYS];
+						const inputFields = [worldInput, threadInput, chapterInput, adventureInput, locationInput, fcDateInput, fcCategoryInput];
 						if (cache) {
 							frontmatterKeys.forEach((key, index) => {
 								if (cache.frontmatter) {
@@ -174,6 +178,7 @@ export default class CreateSessionModal extends Modal {
 						'{{world}}': worldInput.value,
 						'{{thread}}': threadInput.value,
 						'{{chapter}}': chapterInput.value,
+						'{{adventure}}': adventureInput.value,
 						'{{location}}': locationInput.value,
 						'{{fc-date}}': fcDateInput.value,
 						'{{fc-category}}': fcCategoryInput.value
