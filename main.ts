@@ -1,4 +1,3 @@
-import { Console } from 'console';
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, TFolder } from 'obsidian';
 import CreateSessionModal from './CreateSessionModal';
 import CreateSessionSettingsTab from './CreateSessionSettings';

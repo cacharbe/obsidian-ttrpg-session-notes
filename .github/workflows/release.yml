@@ -1,0 +1,61 @@
+name: Release
+
+# Triggers on bare version tags produced by `npm version` with the
+# tag-version-prefix="" setting in .npmrc  (e.g. "1.1.0", not "v1.1.0").
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write  # required to create GitHub Releases and upload assets
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build production bundle
+        run: npm run build
+
+      # Verify the tag matches the version declared in manifest.json so that
+      # Obsidian's registry never sees a mismatched release.
+      - name: Verify tag matches manifest version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          MANIFEST_VERSION=$(node -p "require('./manifest.json').version")
+          if [ "$TAG" != "$MANIFEST_VERSION" ]; then
+            echo "❌ Tag '$TAG' does not match manifest.json version '$MANIFEST_VERSION'."
+            echo "   Run: npm version <patch|minor|major>  (which updates manifest.json via version-bump.mjs)"
+            exit 1
+          fi
+          echo "✅ Tag $TAG matches manifest.json"
+
+      # Attach the three files Obsidian's community plugin registry requires.
+      # When a user installs the plugin via Obsidian, it downloads these assets
+      # from the latest GitHub Release for this repo.
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body: |
+            Install in Obsidian via **Settings → Community Plugins → Browse** once the plugin is listed,
+            or manually by downloading `main.js`, `manifest.json`, and `styles.css` into your vault's
+            `.obsidian/plugins/create-campaign-session-plugin/` folder.
+          files: |
+            main.js
+            manifest.json
+            styles.css

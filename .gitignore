@@ -21,6 +21,9 @@ dist/
 # obsidian
 data.json
 
+# Claude Code local settings (machine-specific permissions)
+.claude/
+
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
 /.vs/obsidian-ttrpg-session-notes/config/applicationhost.config
